@@ -44,7 +44,7 @@ import GatewayDiagnostics from '../components/GatewayDiagnostics';
 import OverviewView from '../components/OverviewView';
 
 export default function Dashboard({ onOpenLogin }) {
-  const { isAuthenticated, isAdmin, user, login, signup, loading: authLoading, error: authError } = useAuth();
+  const { isAuthenticated, isAdmin, user, login, signup, loading: authLoading, error: authError, setError: setAuthGlobalError } = useAuth();
   const [adminTab, setAdminTab] = useState('overview');
   const [summary, setSummary] = useState(null);
   const [routes, setRoutes] = useState([]);
@@ -93,6 +93,10 @@ export default function Dashboard({ onOpenLogin }) {
   }, [isAuthenticated, isAdmin]);
 
   const handleQuickLogin = async (username, password) => {
+    setLandingUsername(username);
+    setLandingPassword(password);
+    setLandingValidation('');
+    if (setAuthGlobalError) setAuthGlobalError(null);
     setQuickLoginLoading(true);
     try {
       await login(username, password);
@@ -269,7 +273,11 @@ export default function Dashboard({ onOpenLogin }) {
             <button
               type="button"
               className={`auth-toggle-btn ${authMode === 'signin' ? 'active' : ''}`}
-              onClick={() => { setAuthMode('signin'); setLandingValidation(''); }}
+              onClick={() => {
+                setAuthMode('signin');
+                setLandingValidation('');
+                if (setAuthGlobalError) setAuthGlobalError(null);
+              }}
             >
               <Lock size={13} />
               <span>Sign In</span>
@@ -277,7 +285,11 @@ export default function Dashboard({ onOpenLogin }) {
             <button
               type="button"
               className={`auth-toggle-btn ${authMode === 'signup' ? 'active' : ''}`}
-              onClick={() => { setAuthMode('signup'); setLandingValidation(''); }}
+              onClick={() => {
+                setAuthMode('signup');
+                setLandingValidation('');
+                if (setAuthGlobalError) setAuthGlobalError(null);
+              }}
             >
               <UserPlus size={13} />
               <span>Register Account</span>
@@ -294,7 +306,11 @@ export default function Dashboard({ onOpenLogin }) {
                   type="text"
                   placeholder={authMode === 'signup' ? 'Choose unique username' : 'admin or alice_dev'}
                   value={landingUsername}
-                  onChange={(e) => setLandingUsername(e.target.value)}
+                  onChange={(e) => {
+                    setLandingUsername(e.target.value);
+                    setLandingValidation('');
+                    if (setAuthGlobalError) setAuthGlobalError(null);
+                  }}
                   className="white-input"
                 />
               </div>
@@ -309,7 +325,11 @@ export default function Dashboard({ onOpenLogin }) {
                     type="email"
                     placeholder="name@example.com"
                     value={landingEmail}
-                    onChange={(e) => setLandingEmail(e.target.value)}
+                    onChange={(e) => {
+                      setLandingEmail(e.target.value);
+                      setLandingValidation('');
+                      if (setAuthGlobalError) setAuthGlobalError(null);
+                    }}
                     className="white-input"
                   />
                 </div>
@@ -324,7 +344,11 @@ export default function Dashboard({ onOpenLogin }) {
                   type={showLandingPassword ? 'text' : 'password'}
                   placeholder={authMode === 'signup' ? 'Min. 6 characters' : 'Enter password'}
                   value={landingPassword}
-                  onChange={(e) => setLandingPassword(e.target.value)}
+                  onChange={(e) => {
+                    setLandingPassword(e.target.value);
+                    setLandingValidation('');
+                    if (setAuthGlobalError) setAuthGlobalError(null);
+                  }}
                   className="white-input"
                 />
                 <button

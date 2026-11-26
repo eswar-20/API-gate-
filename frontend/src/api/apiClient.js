@@ -93,11 +93,13 @@ export const authApi = {
   login: (username, password) => apiRequest('/api/auth/login', {
     method: 'POST',
     headers: { Authorization: null },
+    skipAuthInterceptor: true,
     body: JSON.stringify({ username, password })
   }),
   signup: (username, email, password) => apiRequest('/api/auth/signup', {
     method: 'POST',
     headers: { Authorization: null },
+    skipAuthInterceptor: true,
     body: JSON.stringify({ username, email, password })
   })
 };

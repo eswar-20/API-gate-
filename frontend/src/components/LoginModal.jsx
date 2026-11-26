@@ -17,7 +17,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginModal({ isOpen, onClose }) {
-  const { login, signup, loading, error } = useAuth();
+  const { login, signup, loading, error, setError } = useAuth();
   const [authMode, setAuthMode] = useState('signin'); // 'signin' | 'signup'
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -31,6 +31,7 @@ export default function LoginModal({ isOpen, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setValidationError('');
+    if (setError) setError(null);
 
     if (!username.trim()) {
       setValidationError('Please enter your identity or username.');
@@ -63,6 +64,7 @@ export default function LoginModal({ isOpen, onClose }) {
     setPassword(pass);
     setSelectedRoleHint(role);
     setValidationError('');
+    if (setError) setError(null);
   };
 
   return (
@@ -93,7 +95,11 @@ export default function LoginModal({ isOpen, onClose }) {
             <button
               type="button"
               className={`auth-toggle-btn ${authMode === 'signin' ? 'active' : ''}`}
-              onClick={() => { setAuthMode('signin'); setValidationError(''); }}
+              onClick={() => {
+                setAuthMode('signin');
+                setValidationError('');
+                if (setError) setError(null);
+              }}
             >
               <Lock size={13} />
               <span>Sign In</span>
@@ -101,7 +107,11 @@ export default function LoginModal({ isOpen, onClose }) {
             <button
               type="button"
               className={`auth-toggle-btn ${authMode === 'signup' ? 'active' : ''}`}
-              onClick={() => { setAuthMode('signup'); setValidationError(''); }}
+              onClick={() => {
+                setAuthMode('signup');
+                setValidationError('');
+                if (setError) setError(null);
+              }}
             >
               <UserPlus size={13} />
               <span>Register Account</span>
@@ -158,7 +168,11 @@ export default function LoginModal({ isOpen, onClose }) {
                 <input
                   type="text"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                    setValidationError('');
+                    if (setError) setError(null);
+                  }}
                   placeholder={authMode === 'signup' ? 'Choose unique username' : 'e.g. admin or alice_dev'}
                   className="white-input"
                   autoFocus
@@ -189,7 +203,11 @@ export default function LoginModal({ isOpen, onClose }) {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setValidationError('');
+                    if (setError) setError(null);
+                  }}
                   placeholder={authMode === 'signup' ? 'Min. 6 characters' : 'Enter account password'}
                   className="white-input"
                 />
